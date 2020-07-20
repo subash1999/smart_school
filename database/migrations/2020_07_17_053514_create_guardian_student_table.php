@@ -23,6 +23,7 @@ class CreateGuardianStudentTable extends Migration
                 ->constrained('students')
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
+            $table->string('relation_to_student')->nullable();
             $table->unique(['guardian_id','student_id']);
             $table->timestamps();
         });

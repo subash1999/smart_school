@@ -16,16 +16,22 @@ class CreateTeachersTable extends Migration
         Schema::create('teachers', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->enum('gender',['Male','Female','Other',null])->default(null);
             $table->string('passport_photo')->nullable();
             $table->string('address')->nullable();
-            $table->string('state')->nullable();
+            $table->string('district')->nullable();
             $table->string('country')->default('Nepal');
             $table->string('phone1')->nullable();
             $table->string('phone2')->nullable();
             $table->foreignId('user_id')
-                ->constrained('users')
+                ->unique()
                 ->nullable()
+                ->constrained('users')
                 ->onDelete('set null')
+                ->onUpdate('cascade');
+            $table->foreignId('school_session_id')
+                ->constrained('school_sessions')
+                ->onDelete('cascade')
                 ->onUpdate('cascade');
             $table->boolean('has_left')->default(False);
             $table->text('description')->nullable();

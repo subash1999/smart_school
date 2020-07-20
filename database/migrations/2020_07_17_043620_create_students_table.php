@@ -16,19 +16,26 @@ class CreateStudentsTable extends Migration
         Schema::create('students', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->integer('roll_no');
+            $table->enum('gender',['Male','Female','Other',null])->default(null);
+            $table->integer('roll_no')->nullable();
             $table->string('passport_photo')->nullable();
-            $table->string('address')->nullable();
+            $table->string('district')->nullable();
             $table->string('state')->nullable();
             $table->string('country')->default('Nepal');
             $table->string('phone1')->nullable();
             $table->string('phone2')->nullable();
             $table->string('email')->nullable();
             $table->foreignId('school_session_id')
-                ->constrained('school_sessions')
                 ->unique()
                 ->nullable()
-                ->onDelete('set null')
+                ->constrained('school_sessions')
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
+            $table->foreignId('grade_id')
+                ->unique()
+                ->nullable()
+                ->constrained('grades')
+                ->onDelete('cascade')
                 ->onUpdate('cascade');
             $table->boolean('has_left')->default(False);
             $table->text('description')->nullable();

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateExamGroupExamsTable extends Migration
+class CreateGradeSubjectTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,18 +13,17 @@ class CreateExamGroupExamsTable extends Migration
      */
     public function up()
     {
-        Schema::create('exam_group_exams', function (Blueprint $table) {
+        Schema::create('grade_subject', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('exam_group_id')
-                ->constrained('exam_groups')
+            $table->foreignId('grade_id')
+                ->constrained('grades')
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
-            $table->foreignId('exam_id')
-                ->constrained('exams')
+            $table->foreignId('subject_id')
+                ->constrained('subjects')
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
-            $table->float('conversion_percentage')->default('100');
-            $table->text('description')->nullable();
+            $table->unique(['grade_id','subject_id']);
             $table->timestamps();
         });
     }
@@ -36,6 +35,6 @@ class CreateExamGroupExamsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('exam_group_exams');
+        Schema::dropIfExists('grade_subject');
     }
 }

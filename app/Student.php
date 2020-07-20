@@ -6,5 +6,69 @@ use Illuminate\Database\Eloquent\Model;
 
 class Student extends Model
 {
-    //
+    /**
+     * A student has many guardians
+     * i.e. one student may have a father and mother registered
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function guardians(){
+        return $this->belongsToMany('App\Guardian','guardian_student','student_id','guardian_id');
+    }
+
+    /**
+     * A student has many guardianStudent, guardian_student is a pivot table
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function guardianStudents(){
+        return $this->hasMany('App\GuardianStudent','student_id','id');
+    }
+
+    /**
+     * A student has many marks for different exams
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function marks(){
+        return $this->hasMany('App\Mark','student_id','id');
+    }
+
+    /**
+     * A student belongs to a school session
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function schoolSession(){
+        return $this->belongsTo('App\SchoolSession','school_session_id','id');
+    }
+
+    /**
+     * A student belongs to a grade
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function grade(){
+        return $this->belongsTo('App\Grade','grade_id','id');
+    }
+
+    /**
+     * A student has many student attendances
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function studentAttendances(){
+        return $this->hasMany('App\StudentAttendance','student_id','id');
+    }
+
+    /**
+     * A student has many attendance days (School Calendars)
+     * use unique value to the date of SchoolCalendar so that we can get the dates when student was present
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function attendedSchoolCalendars(){
+        return $this->belongsToMany('App\SchoolCalendar','student_attendance','student_id','school_calendar_id');
+    }
+
+    /**
+     * List of the attended grade subject
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function attendedGradeSubjects(){
+        return $this->belongsToMany('App\GradeSubject','student_attendance','student_id','grade_subject_id');
+    }
 }

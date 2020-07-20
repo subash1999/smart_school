@@ -22,6 +22,7 @@ class CreateSchoolEventsTable extends Migration
             $table->string('event_name');
             $table->string('event_color')->nullable();
             $table->integer('priority')->nullable();
+            $table->text('description')->nullable();
             $table->timestamps();
         });
     }

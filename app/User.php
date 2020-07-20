@@ -38,4 +38,35 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    /**
+     * A user has one school admin
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function schoolAdmin(){
+        return $this->hasOne('App\SchoolAdmin','user_id','id');
+    }
+    /**
+     * A user has one guardian
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function guardian(){
+        return $this->hasOne('App\Guardian','user_id','id');
+    }
+    /**
+     * A user has one super admin
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function superAdmin(){
+        return $this->hasOne('App\SuperAdmin','user_id','id');
+    }
+
+    /**
+     * A user has one teacher
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function  teacher(){
+        return $this->hasOne('App\Teacher','user_id','id');
+    }
+
 }

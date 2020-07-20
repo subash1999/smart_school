@@ -19,8 +19,13 @@ class CreateMarksTable extends Migration
                 ->constrained('exams')
                 ->onDelete('cascade')
                 ->OnUpdate('cascade');
-            $table->float('marks_obtained');
-            $table->text('remarks');
+            $table->foreignId('student_id')
+                ->constrained('students')
+                ->onDelete('cascade')
+                ->OnUpdate('cascade');
+//           Null marks_obtained for the absent student
+            $table->float('marks_obtained')->nullable();
+            $table->text('remarks')->nullable();
             $table->timestamps();
         });
     }

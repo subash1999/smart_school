@@ -24,7 +24,7 @@ class CreateStudentAttendancesTable extends Migration
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
             $table->foreignId('grade_subjects_id')
-                ->constrained('grade_subjects')
+                ->constrained('grade_subject')
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
             $table->boolean('is_present')->default(True);

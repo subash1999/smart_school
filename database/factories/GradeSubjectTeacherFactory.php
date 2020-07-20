@@ -2,10 +2,10 @@
 
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
-use App\GradeTeacher;
+use App\GradeSubjectTeacher;
 use Faker\Generator as Faker;
 
-$factory->define(GradeTeacher::class, function (Faker $faker) {
+$factory->define(GradeSubjectTeacher::class, function (Faker $faker) {
     return [
         //
     ];

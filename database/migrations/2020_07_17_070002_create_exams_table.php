@@ -16,7 +16,7 @@ class CreateExamsTable extends Migration
         Schema::create('exams', function (Blueprint $table) {
             $table->id();
             $table->foreignId('grade_subject_id')
-                ->constrained('grade_subjects')
+                ->constrained('grade_subject')
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
             $table->string('exam_name');

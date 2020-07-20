@@ -17,7 +17,7 @@ class CreateSchoolsTable extends Migration
             $table->id();
             $table->string('name');
             $table->string('address');
-            $table->string('state')->nullable();
+            $table->string('district')->nullable();
             $table->string('country')->default('Nepal');
             $table->string('phone1');
             $table->string('phone2')->nullable();
