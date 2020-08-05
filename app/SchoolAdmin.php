@@ -12,7 +12,7 @@ class SchoolAdmin extends Model
      * because schoolAdmin is responsible for creating school session
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function schools(){
+    public function school(){
         return $this->belongsTo('App\School','school_id','id');
     }
 

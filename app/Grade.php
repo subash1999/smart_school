@@ -36,10 +36,19 @@ class Grade extends Model
     /**
      * A grade has many students
      * e.g. A grade 1 can have 20 students
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function students(){
-        return $this->hasMany('App\Student','grade_id','id');
+        return $this->belongsToMany('App\Student','student_grade','grade_id','id');
     }
+
+    /**
+     * A grade has many student grade
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function studentGrades(){
+        return $this->hasMany('App\StudentGrade','grade_id','id');
+    }
+
 
 }

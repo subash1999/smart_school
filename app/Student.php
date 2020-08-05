@@ -40,6 +40,14 @@ class Student extends Model
     }
 
     /**
+     * A student belongs to a school
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function school(){
+        return $this->belongsTo('App\School','school_id','id');
+    }
+
+    /**
      * A student belongs to a grade
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
@@ -53,6 +61,30 @@ class Student extends Model
      */
     public function studentAttendances(){
         return $this->hasMany('App\StudentAttendance','student_id','id');
+    }
+
+    /**
+     * A student has many studentGradeSchoolSessions
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function studentGradeSchoolSessions(){
+        return $this->hasMany('App\StudentGradeSchoolSession','student_id','id');
+    }
+
+    /**
+     * A student can study in different grades in different school sessions
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function grades(){
+        return $this->belongsToMany('App\Grade','student_grade','student_id','grade_id');
+    }
+
+    /**
+     * A student has many student grade
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function studentGrade(){
+        return $this->hasMany('App\StudentGrade','student_id','id');
     }
 
     /**
@@ -71,4 +103,5 @@ class Student extends Model
     public function attendedGradeSubjects(){
         return $this->belongsToMany('App\GradeSubject','student_attendance','student_id','grade_subject_id');
     }
+
 }

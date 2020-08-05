@@ -18,6 +18,11 @@ class CreateExamGroupsTable extends Migration
             $table->string('exam_group_name');
             $table->string('result_publish_timestamp')->nullable();
             $table->text('description')->nullable();
+            $table->foreignId('school_session_id')
+                ->nullable()
+                ->constrained('school_sessions')
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
             $table->timestamps();
         });
     }

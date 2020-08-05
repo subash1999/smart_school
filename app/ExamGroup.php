@@ -52,4 +52,13 @@ class ExamGroup extends Model
     public function examGroups(){
         return $this->belongsToMany('App\ExamGroup','exam_group_exam','parent_exam_group_id','exam_group_id');
     }
+
+    /**
+     * A exam group belongs to a school session
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function schoolSession(){
+        return $this->belongsTo('App\schoolSession','school_session_id','id');
+    }
+
 }

@@ -11,6 +11,8 @@ class StudentTableSeeder extends Seeder
      */
     public function run()
     {
-        factory('App\Student',10)->create();
+        for($i=0;$i<1000;$i++){
+            factory('App\Student')->create();
+        }
     }
 }

@@ -25,7 +25,6 @@ class CreateSchoolAdminsTable extends Migration
             $table->string('phone2')->nullable();
             $table->text('description')->nullable();
             $table->foreignId('user_id')
-                ->unique()
                 ->nullable()
                 ->constrained('users')
                 ->onDelete('set null')

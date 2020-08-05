@@ -24,15 +24,15 @@ class CreateTeachersTable extends Migration
             $table->string('phone1')->nullable();
             $table->string('phone2')->nullable();
             $table->foreignId('user_id')
-                ->unique()
                 ->nullable()
                 ->constrained('users')
                 ->onDelete('set null')
                 ->onUpdate('cascade');
-            $table->foreignId('school_session_id')
-                ->constrained('school_sessions')
+            $table->foreignId('school_id')
+                ->constrained('schools')
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
+            $table->date('joined_at')->nullable()->default(now());
             $table->boolean('has_left')->default(False);
             $table->text('description')->nullable();
             $table->timestamps();

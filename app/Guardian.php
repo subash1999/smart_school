@@ -6,13 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class Guardian extends Model
 {
-    /**
-     * A guardian belongs to a session of a school
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function schoolSession(){
-        return $this->belongsTo('App\SchoolSession','school_session_id','id');
-    }
 
     /**
      * A guardian belongs to many students
@@ -36,5 +29,9 @@ class Guardian extends Model
      */
     public function user(){
         return $this->belongsTo('App\User','user_id','id');
+    }
+
+    public function school(){
+        return $this->belongsTo('App\School','school_id','id');
     }
 }

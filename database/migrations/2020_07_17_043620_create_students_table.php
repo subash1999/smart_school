@@ -17,28 +17,19 @@ class CreateStudentsTable extends Migration
             $table->id();
             $table->string('name');
             $table->enum('gender',['Male','Female','Other',null])->default(null);
-            $table->integer('roll_no')->nullable();
             $table->string('passport_photo')->nullable();
+            $table->string('address')->nullable();
             $table->string('district')->nullable();
-            $table->string('state')->nullable();
             $table->string('country')->default('Nepal');
             $table->string('phone1')->nullable();
             $table->string('phone2')->nullable();
             $table->string('email')->nullable();
-            $table->foreignId('school_session_id')
-                ->unique()
-                ->nullable()
-                ->constrained('school_sessions')
-                ->onDelete('cascade')
-                ->onUpdate('cascade');
-            $table->foreignId('grade_id')
-                ->unique()
-                ->nullable()
-                ->constrained('grades')
-                ->onDelete('cascade')
-                ->onUpdate('cascade');
             $table->boolean('has_left')->default(False);
             $table->text('description')->nullable();
+            $table->foreignId('school_id')
+                ->constrained('schools')
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
             $table->timestamps();
         });
     }

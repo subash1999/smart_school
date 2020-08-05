@@ -25,15 +25,12 @@ class CreateGuardiansTable extends Migration
             $table->string('phone2')->nullable();
             $table->text('description')->nullable();
             $table->foreignId('user_id')
-                ->unique()
                 ->nullable()
                 ->constrained('users')
                 ->onDelete('set null')
                 ->onUpdate('cascade');
-            $table->foreignId('school_session_id')
-                ->unique()
-                ->nullable()
-                ->constrained('school_sessions')
+            $table->foreignId('school_id')
+                ->constrained('schools')
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
             $table->timestamps();

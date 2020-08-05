@@ -32,14 +32,6 @@ class Teacher extends Model
     }
 
     /**
-     * A teacher belongs to a schoolSession
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function schoolSession(){
-        return $this->belongsTo('App\SchoolSession','school_session_id','id');
-    }
-
-    /**
      * One teacher can have many attendances
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
@@ -48,11 +40,18 @@ class Teacher extends Model
     }
 
     /**
-     * Get all the School Caledars(days) of a teacher where he/she was absent or present
+     * Get all the School Calendars(days) of a teacher where he/she was absent or present
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function schoolCalendars(){
         return $this->belongsToMany('App\SchoolCalendar','teacher_attendance','teacher_id','school_calendar_id');
     }
 
+    /**
+     * A teacher belongs to a school
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function school(){
+        return $this->belongsTo('App\School','school_id','id');
+    }
 }

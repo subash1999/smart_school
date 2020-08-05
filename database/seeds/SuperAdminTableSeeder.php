@@ -11,6 +11,6 @@ class SuperAdminTableSeeder extends Seeder
      */
     public function run()
     {
-        factory('App\SuperAdmin',10)->create();
+        factory('App\SuperAdmin',1)->create();
     }
 }
