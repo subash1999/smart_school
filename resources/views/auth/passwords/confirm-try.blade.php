@@ -24,11 +24,11 @@
     <div class="row login-center-div ">
         <div class="col-6 bg-gradient-theme align-items-center text-center" style="display: flex;background-color: black;">
             <div class="text-center">
-                <h2 class="h2 text-center text-uppercase">{{ __('Confirm Password') }}</h2>
+                <h3 class="h3 text-center text-uppercase">{{ __('Confirm Password') }}</h3>
             </div>
         </div>
         <div class="col-6">
-            <h5 class="h5 text-center">{{ __('Please confirm your password before continuing.') }}</h5>
+            <h6 class="h6 text-center">{{ __('Please confirm your password before continuing.') }}</h6>
             <form method="POST" action="{{ route('password.confirm') }}">
                 @csrf
 
@@ -48,7 +48,7 @@
 
                 <div class="form-group row mb-0">
                     <div class="col-md-8 offset-md-4">
-                        <button type="submit" class="btn btn-theme">
+                        <button type="submit" class="btn btn-primary">
                             {{ __('Confirm Password') }}
                         </button>
 

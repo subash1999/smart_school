@@ -87,6 +87,8 @@
                                 $(document).on('click','.logout-btn',function(){
                                     $(".logout-form").submit();
                                 });
+                                // disable autoscroll to top while clicking on popover of loginedUser icon
+                                $('#loginedUser').on('click', function(e) {e.preventDefault(); return true;});
                             });
 
                         </script>

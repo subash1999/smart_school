@@ -2,7 +2,7 @@
 
 use App\User;
 use Illuminate\Support\Facades\Route;
-
+use Illuminate\Http\Request;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -20,16 +20,29 @@ Route::get('/', function () {
 Route::get('/home', function () {
     return view('home');
 });
-Auth::routes();
+Auth::routes(['register' => false]);
 Route::get('/available-dashboard', "AvailableDashboardController@index")->name('available-dashboard');
 Route::post('/go-to-dashboard',"AvailableDashboardController@goToDashboard")->name("go-to-dashboard");
-
+Route::get('/password-verification',function(Request $request){
+//    dd($request);
+    return view("snippets.password-verification",['url'=> url('/password-verification')]);
+});
+Route::post('/password-verification',function(Request $request){
+    $check = Hash::check($request->post('password'), auth()->user()->password);
+});
 
 Route::group(['prefix'=>'super-admin',"namespace"=>'SuperAdmin', 'middleware'=>'super-admin'],function(){
     Route::get('','SuperAdminDashboardController@index')->name("super-admin-dashboard");
-    Route::get('/school','SchoolController@index')->name("super-admin-school");
-    Route::get('/school/create','SchoolController@create')->name("super-admin-add-school");
-    Route::post('/school','SchoolController@store')->name("super-admin-store-school");
+    Route::group(['middleware' => 'password.confirm'],function(){
+        Route::get('/school','SchoolController@index')->name("super-admin-school");
+        Route::get('/school/create','SchoolController@create')->name("super-admin-create-school");
+        Route::post('/school','SchoolController@store')->name("super-admin-store-school");
+        Route::delete('/school/{id}','SchoolController@destroy')->name("super-admin-destroy-school");
+        Route::get('/school/{id}','SchoolController@show')->name('super-admin-show-school');
+        Route::get('/school/{id}/edit','SchoolController@edit')->name('super-admin-edit-school');
+        Route::put('/school/{id}/update-school-logo','SchoolController@updateSchoolLogo')->name('super-admin-update-school-logo');
+    });
+
 });
 Route::group(['prefix'=>'school-admin',"namespace"=>'SchoolAdmin', 'middleware'=>'school-admin'],function(){
     Route::get('','SchoolAdminDashboardController@index')->name("school-admin-dashboard");

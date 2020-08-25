@@ -57,7 +57,7 @@
                 @php
                     $school_urls = [
                         'schools' => route("super-admin-school"),
-                        'add_school' => route("super-admin-add-school"),
+                        'create_school' => route("super-admin-create-school"),
                         ];
                 @endphp
                 <li class="{{ activeClass($school_urls) }}">
@@ -70,7 +70,7 @@
                             <a href="{{ $school_urls['schools'] }}">Schools</a>
                         </li>
                         <li>
-                            <a href="{{ $school_urls['add_school'] }}">Add School</a>
+                            <a href="{{ $school_urls['create_school'] }}">Create School</a>
                         </li>
                     </ul>
                 </li>
@@ -111,6 +111,15 @@
         <!-- Page Content  -->
         {{-- Content For the Current Link in sidebar        --}}
         <div class="content-of-sidebar" id="content-of-sidebar">
+            {{--        check if the page-heading section is set in child views--}}
+            {{--    if the page-heading is set then show it the heading navigation--}}
+            @if (trim($__env->yieldContent('page-heading')))
+                <nav class="navbar navbar-light bg-gradient-theme ">
+                    <span class="navbar-brand text-white col-10 text-truncate">@yield('page-heading')</span>
+                </nav>
+                <br>
+            @endif
+
             @yield('super-admin-content')
         </div>
     </div>

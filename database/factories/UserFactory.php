@@ -26,3 +26,7 @@ $factory->define(User::class, function (Faker $faker) {
         'avatar' => $faker->imageUrl($width = 640, $height = 480,'people'),
     ];
 });
+
+$factory->state(User::class, 'soft_deleted', [
+    'deleted_at' => now(),
+]);
