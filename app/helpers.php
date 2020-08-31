@@ -1,6 +1,41 @@
 <?php
-use Illuminate\Support\Str;
 
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Str;
+use Symfony\Component\HttpFoundation\File\File;
+
+/**
+ * @param $filename
+ * @return string
+ */
+function getAvatarImageUrl($filename){
+    $filename = urlencode($filename);
+    return route('avatar-image')."?filename=$filename";
+}
+
+/**
+ * @param $filename
+ * @return string
+ */
+function getPassportPhotoImageUrl($filename){
+    $filename = urlencode($filename);
+    return route('passport-photo-image')."?filename=$filename";
+}
+
+/**
+ * @param $filename
+ * @return string
+ */
+function getLogoImageUrl($filename){
+    $filename = urlencode($filename);
+    return route('logo-image')."?filename=$filename";
+}
+
+/**
+ * @param $sentence
+ * @return string
+ * if "United States" is given it will return "US"
+ */
 function getShortFormOfSentence($sentence){
     $words = preg_split("/[\s,_-]+/", $sentence);
     $acronym = "";
@@ -10,7 +45,11 @@ function getShortFormOfSentence($sentence){
     return $acronym;
 }
 
-// Function for basic field validation (present and neither empty nor only white space
+/**
+ * @param $str
+ * @return bool
+ * Function for basic field validation (present and neither empty nor only white space
+ */
 function isNullOrEmptyString($str){
     return (!isset($str) || trim($str) === '');
 }
@@ -32,6 +71,13 @@ function joinNotEmptyArrayElements($join_by,$arr){
     return join($join_by,$new_arr);
 }
 
+/**
+ * @param $submit_btn_jquery_string
+ * @param $form_jquery_string
+ * @param $confirmation_msg
+ * @param string $title
+ * @return string
+ */
 function passwordConfirmationBoxScript($submit_btn_jquery_string,$form_jquery_string,$confirmation_msg,$title='') {
     $password_confirmation_route = route('password.confirm');
     $a = <<<EOT
@@ -84,104 +130,73 @@ function passwordConfirmationBoxScript($submit_btn_jquery_string,$form_jquery_st
     return($a);
 }
 
-function croppieFileUpload($photo_upload_url,
-                           $upload_btn_jquery=NULL,
-                           $viewport_width=200,$viewport_height=200,
-                           $boundary_width=265,$boundary_height=265){
-
-    $uuid = Str::uuid();
-
-    $croppie_html = <<<EOT
-    <!--   Image Crop and Upload Modal -->
-    <div id="uploadimageModal_$uuid" class="modal" role="dialog">
-        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLongTitle_$uuid">Upload & Crop Image</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <input type="file" name="photo_$uuid" id="photo_$uuid"
-                           class="mx-auto d-none"
-                           accept="image/*">
-                    <div class="row  ">
-                        <div class="mx-auto d-block text-center">
-                            <div id="image_demo_$uuid" style="width:350px; margin-top:30px"></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-theme crop_image_$uuid">Crop & Upload Image</button>
-                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    EOT;
-    $croppie_js = <<<EOT
-    <!--Image crop and upload modal end -->
-    <script >
-        $(document).ready(function(){
-            if('{$upload_btn_jquery}'!=''){
-                $('{$upload_btn_jquery}').on('click',function(){
-                    $("#photo_{$uuid}").click()
-                });
-            }
-            var image_crop = $('#image_demo_{$uuid}').croppie({
-                enableExif: true,
-                enableOrientation: true,
-                viewport: {
-                    width:{$viewport_width},
-                    height:{$viewport_height},
-                    type:'square' //circle
-                },
-                boundary:{
-                    width:{$boundary_width},
-                    height:{$boundary_height}
-                },
-            });
-
-            $('#photo_{$uuid}').on('change', function(){
-                var reader = new FileReader();
-                reader.onload = function (event) {
-                    image_crop.croppie('bind', {
-                        url: event.target.result
-                    }).then(function(){
-                    });
-                }
-                reader.readAsDataURL(this.files[0]);
-                $('#uploadimageModal_{$uuid}').modal('show');
-            });
-
-            $('.crop_image_{$uuid}').click(function(event){
-                image_crop.croppie('result', {
-                    type: 'canvas',
-                    size: 'viewport'
-                }).then(function(response){
-                    // console.log(response);
-                    $("#logo").attr('src',response);
-                    $("#photo_{$uuid}").val(null);
-                    $('#uploadimageModal_{$uuid}').modal('hide');
-                    $.ajax({
-                        url:"{$photo_upload_url}",
-                        type: "POST",
-                        data:{"image": response},
-                        success:function(data)
-                        {
-                            $('#uploadimageModal').modal('hide');
-                            $('#uploaded_image').html(data);
-                        }
-                    });
-                })
-            });
-
-        });
-    </script>
-    EOT;
-    return ['html'=>$croppie_html,'js'=>$croppie_js];
-
+/**
+ * @param String $image_64
+ * @return bool|string
+ */
+function base64ToImage(String $image_64){
+    $replace = substr($image_64, 0, strpos($image_64, ',')+1);
+//      find substring fro replace here eg: data:image/png;base64,
+    $image = str_replace($replace, '', $image_64);
+    $image = str_replace(' ', '+', $image);
+    return base64_decode($image);
 }
 
+/**
+ * @param String $image_64
+ * @return mixed
+ */
+function base64ImageExtension(String $image_64){
+    $extension = explode('/', explode(':', substr($image_64, 0, strpos($image_64, ';')))[1])[1];   // .jpg .png .pdf
+    return $extension;
+}
 
+/**
+ * @param String $string
+ * @return File
+ */
+function stringToTempFile(String $string,String $extension=Null){
+    // save it to temporary dir first.
+    $tmpFilePath = sys_get_temp_dir() . '/' . Str::uuid()->toString();
+    if(isset($extension)){
+        $tmpFilePath .= ".".$extension;
+    }
+    file_put_contents($tmpFilePath, $string);
+
+    // this just to help us get file info.
+    return new File($tmpFilePath);
+}
+
+/**
+ * @param String $image
+ * @return File
+ */
+function imageStringToTempFile(String $image,String $extension=Null){
+    return stringToTempFile($image,$extension);
+}
+
+/**
+ * @param File $file
+ * @return UploadedFile
+ */
+function fileToUploadedFile(File $file){
+    $file = new UploadedFile(
+        $file->getPathname(),
+        $file->getFilename(),
+        $file->getMimeType(),
+        0,
+        true // Mark it as test, since the file isn't from real HTTP POST.
+    );
+    return $file;
+}
+
+/**
+ * @param String $base64Image
+ * @return UploadedFile
+ */
+function base64ToUploadedFile(String $base64Image){
+    $image = base64ToImage($base64Image);
+    $tmp_image_file = imageStringToTempFile($image,base64ImageExtension($base64Image));
+    $image_uploaded_file = fileToUploadedFile($tmp_image_file);;
+    return $image_uploaded_file;
+}

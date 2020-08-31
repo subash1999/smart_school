@@ -3,6 +3,7 @@
 use App\User;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -24,9 +25,28 @@ Auth::routes(['register' => false]);
 Route::get('/available-dashboard', "AvailableDashboardController@index")->name('available-dashboard');
 Route::post('/go-to-dashboard',"AvailableDashboardController@goToDashboard")->name("go-to-dashboard");
 Route::get('/password-verification',function(Request $request){
-//    dd($request);
     return view("snippets.password-verification",['url'=> url('/password-verification')]);
 });
+Route::get('image',function(){
+    //        return $this->avatar;
+    $path = Storage::path("onezgrmazT--1598541462----7eadf745-1f4a-410e-9824-add95d56405c.png");
+//    return Storage::disk('local')->download(, Auth::user()->avatar);
+    return response()->file($path);
+});
+
+Route::group(['prefix'=>'storage','middleware'=>'auth'],function(){
+    Route::get('/avatar','StorageController@getAvatarImage')->name('avatar-image');
+    Route::get('/passport_photo','StorageController@getPassportPhotoImage')->name('passport-photo-image');
+    Route::get('/logo/','StorageController@getLogoImage')->name('logo-image');
+//    Route::put('/avatar','StorageController@getAvatarImage')->name('upload-avatar-image');
+//    Route::put('/passport_photo','StorageController@getPassportPhotoImage')->name('upload-passport-photo-image');
+//    Route::put('/logo','StorageController@getLogoImage')->name('upload-logo-image');
+});
+
+Route::get('image2/{filename}','StorageController@getLogoImage');
+Auth::loginUsingId(0);
+//dd(Auth::user()->getAvatarImage());
+//dd(Storage::path("onezgrmazT--1598541462----7eadf745-1f4a-410e-9824-add95d56405c.png"));
 Route::post('/password-verification',function(Request $request){
     $check = Hash::check($request->post('password'), auth()->user()->password);
 });

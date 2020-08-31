@@ -27,11 +27,12 @@
                 @else
                     <li class="nav-item" id="loginedUser">
                         <a href="#" class="nav-link">
-                            <img src="{{ Auth::user()->avatar }}" alt="User" class="rounded-circle" style="height: 25px;" >
+                            <img src="{{ getAvatarImageUrl(Auth::user()->avatar) }}"
+                                 alt="User" class="rounded-circle" style="height: 25px;" >
                         </a>
                         <div id="loginedUserInfo" class="d-none">
                             <div id="userInfoWithImage">
-                                <img src="{{ Auth::user()->avatar }}" alt="User"
+                                <img src="{{ getAvatarImageUrl(Auth::user()->avatar) }}" alt="User"
                                      class="img-fluid rounded-circle" style="height: 35px;" >
                                 <br>
                                 <h6 class="text-center mt-3">{{ Auth::user()->email }}</h6>

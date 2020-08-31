@@ -14,10 +14,11 @@
         <tr>
             <td>{{ $loop->index +1 }}</td>
             <td>{{ $school_admin->id }}</td>
-            <td class="justify-content-center"><img src="{{ $school_admin->passport_photo }}"
-                                                    class="img-fluid rounded m-auto d-block"
-                                                    alt="Passport Photo of {{ $school_admin->id }}"
-                                                    style="height: 70px;">
+            <td class="justify-content-center">
+                <img src="{{ getPassportPhotoImageUrl($school_admin->passport_photo) }}"
+                     class="img-fluid rounded m-auto d-block"
+                     alt="Passport Photo of {{ $school_admin->id }}"
+                     style="height: 70px;">
             </td>
             <td>{{ $school_admin->name }}</td>
             <td>{{ joinNotEmptyArrayElements(', ',[$school_admin->address,$school_admin->district,$school_admin->country]) }}</td>

@@ -1,6 +1,6 @@
 <div class="d-block container justify-content-center">
     <div class="row">
-        <img src="{{ $school->logo }}" alt="Logo Not Found" class="rounded float-left d-inline-block img-fluid m-auto img-thumbnail" style="max-height: 130px;">
+        <img src="{{ getLogoImageUrl($school->logo) }}" alt="Logo Not Found" class="rounded float-left d-inline-block img-fluid m-auto img-thumbnail" style="max-height: 130px;">
         <div class="text-center m-auto">
             <h1 class="h1 font-weight-bold">{{ $school->name }}</h1>
             <h5 class="h5">{{ $school->address }}</h5>

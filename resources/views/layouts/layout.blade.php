@@ -16,6 +16,7 @@
 
         <!-- Styles -->
         <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+        <link href="{{ asset('css/fontawesome-5-all.css') }}" rel="stylesheet" >
 
         <!-- CSS for file -->
         @stack('css')
