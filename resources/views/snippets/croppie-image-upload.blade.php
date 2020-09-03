@@ -68,8 +68,8 @@
                 },
             });
 
-            $('#uploadimageModal_{{ $uuid }}').on('show',function(){
-                $('#image_{{ $uuid }}').val(null);
+            $('#uploadimageModal_{{ $uuid }}').on('shown.bs.modal',function(){
+                $('#image_{{ $uuid }}').val('');
             });
 
             $('#image_{{ $uuid }}').on('change', function(){
@@ -90,8 +90,8 @@
                 image_crop.croppie('result', {
                     type: 'base64',
                     //for the original image size
-                    size: 'viewport',
-                    format: "png",
+                    size: 'original',
+                    format: "jpeg",
                     //keep the hundred percent quality
                     quality: 1
                 }).then(function(response){
@@ -99,10 +99,12 @@
                     $('#image_upload_form_{{ $uuid }}').submit();
                     $('#uploadimageModal_{{ $uuid }}').modal('hide');
                     $("#logo").attr('src',response);
-                    $("#image_{{ $uuid }}").val(null);
+                    $("#image_{{ $uuid }}").val('');
                 })
             });
 
         });
     </script>
 @endpush
+
+

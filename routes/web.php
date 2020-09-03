@@ -53,14 +53,25 @@ Route::post('/password-verification',function(Request $request){
 
 Route::group(['prefix'=>'super-admin',"namespace"=>'SuperAdmin', 'middleware'=>'super-admin'],function(){
     Route::get('','SuperAdminDashboardController@index')->name("super-admin-dashboard");
-    Route::group(['middleware' => 'password.confirm'],function(){
-        Route::get('/school','SchoolController@index')->name("super-admin-school");
-        Route::get('/school/create','SchoolController@create')->name("super-admin-create-school");
-        Route::post('/school','SchoolController@store')->name("super-admin-store-school");
-        Route::delete('/school/{id}','SchoolController@destroy')->name("super-admin-destroy-school");
-        Route::get('/school/{id}','SchoolController@show')->name('super-admin-show-school');
-        Route::get('/school/{id}/edit','SchoolController@edit')->name('super-admin-edit-school');
-        Route::put('/school/{id}/update-school-logo','SchoolController@updateSchoolLogo')->name('super-admin-update-school-logo');
+    Route::group(['prefix'=>'school','middleware' => 'password.confirm'],function(){
+        Route::get('/','SchoolController@index')->name("super-admin-school");
+        Route::get('/create','SchoolController@create')->name("super-admin-create-school");
+        Route::post('/','SchoolController@store')->name("super-admin-store-school");
+        Route::delete('/{id}','SchoolController@destroy')->name("super-admin-destroy-school");
+        Route::get('/{id}','SchoolController@show')->name('super-admin-show-school');
+        Route::get('/{id}/edit','SchoolController@edit')->name('super-admin-edit-school');
+        Route::put('/{id}/update-school-logo','SchoolController@updateSchoolLogo')->name('super-admin-update-school-logo');
+        Route::put('/{id}','SchoolController@updateTextData')->name('super-admin-update-school-text-data');
+    });
+    Route::group(['prefix'=>'school_admin','middleware'=>'password.confirm'],function(){
+        Route::get('/','SchoolAdminController@index')->name("super-admin-school-admin");
+        Route::get('/create','SchoolAdminController@create')->name("super-admin-create-school-admin");
+        Route::post('/','SchoolController@store')->name("super-admin-store-school-admin");
+        Route::delete('/{id}','SchoolController@destroy')->name("super-admin-destroy-school-admin");
+        Route::get('/{id}','SchoolAdminController@show')->name('super-admin-show-school-admin');
+        Route::get('/{id}/edit','SchoolController@edit')->name('super-admin-edit-school-admin');
+        Route::put('/{id}/update-school-logo','SchoolController@updateSchoolLogo')->name('super-admin-update-school-admin-passport-photo');
+        Route::put('/{id}','SchoolController@updateTextData')->name('super-admin-update-school-admin-text-data');
     });
 
 });

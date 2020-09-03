@@ -76,8 +76,8 @@
                 </li>
                 @php
                     $school_admin_urls = [
-                        'school_admins' => '#',
-                        'add_school_admin' => '#',
+                        'school_admins' => route('super-admin-school-admin'),
+                        'create_school_admin' => route('super-admin-create-school-admin'),
                         ];
                 @endphp
                 <li class="{{ activeClass($school_admin_urls) }}">
@@ -90,7 +90,7 @@
                             <a href="{{ $school_admin_urls['school_admins'] }}">School Admins</a>
                         </li>
                         <li>
-                            <a href="{{ $school_admin_urls['add_school_admin'] }}">Add School Admin</a>
+                            <a href="{{ $school_admin_urls['create_school_admin'] }}">Create School Admin</a>
                         </li>
                     </ul>
                 </li>

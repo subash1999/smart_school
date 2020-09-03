@@ -53,7 +53,11 @@
                 @foreach(config("utilities.countries") as $country)
                     @if(strcasecmp(old('country'),$country) == 0)
                         @php
-                        $selected = "selected = \"selected\""
+                            $selected = 'selected = "selected"';
+                        @endphp
+                    @else
+                        @php
+                            unset($selected);
                         @endphp
                     @endif
                     <option value="{{ $country }}" {{ $selected ?? '' }}>{{ $country }}</option>
