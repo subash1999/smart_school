@@ -1,53 +1,69 @@
 @extends("layouts.super-admin-layout")
-@section('page-heading','School / '.$school->name.' ( Edit )')
-
+@section('page-heading','Me / Profile ( Edit )')
+@php
+    $super_admin = auth()->user()->SuperAdmin;
+@endphp
 @section('super-admin-content')
-    <div class="d-block container">
-        <a href="{{ route('super-admin-show-school',['id'=>$school->id]) }}"
-           class="btn btn-primary bg-gradient-primary">View</a>
-        <input type="button" class="btn btn-danger" value="Delete" name="delete" id="delete_school_btn_{{ $school->id }}">
-        <form action="{{ route('super-admin-destroy-school',['id' => $school->id]) }}"
-              name="delete_school_form" id="delete_school_form_{{ $school->id }}"
-              method="POST">
-            @method('delete')
-            @csrf
-            <input type="hidden" value="{{ route('super-admin-school') }}" name="redirect_url">
-            <input type="hidden" value="{{ $school->id }}" name="id" id="school_id_{{ $school->id }}">
-        </form>
-    </div>
-    @push('js')
-        @php
-            $title = "<h5 class=\"h5 font-weight-bolder\">Please Confirm your Password Before Deleting the School</h5>";
-            $title .= "<h6 class=\"small d-inline-block text-truncate w-75\"> ID : ".$school->id." </h6>";
-            $title .= "<h6 class=\"small d-inline-block text-truncate w-75\"> School Name : $school->name </h6>";
-            $title .= "<br><small class=\"small bg-theme text-white font-weight-lighter text-justify font-italic\">";
-            $title .="All the Data Related to School will be Deleted (Students ,Teachers, Guardians, Grades, Exams, etc.)";
-            $title .= "</small>";
-            $res = passwordConfirmationBoxScript("#delete_school_btn_".$school->id,"#delete_school_form_".$school->id,"Password",$title);
-            echo($res);
-        @endphp
-    @endpush
     @include('snippets.change-image',[
-        'upload_btn_text' => 'Upload New Logo',
-        'current_image_url' => getLogoImageUrl($school->logo),
-        'image_upload_url' => route('super-admin-update-school-logo',['id' => $school->id]),
+        'upload_btn_text' => 'Upload New Passport Photo',
+        'current_image_url' => getPassportPhotoImageUrl($super_admin->passport_photo),
+        'image_upload_url' => route('super-admin-update-profile-passport-photo',['id' => $super_admin->id]),
         'redirect_url' => null,
     ])
-{{--    Edit form for the School --}}
-    <form action="{{ route("super-admin-update-school-text-data",['id'=>$school->id]) }}"
+
+    {{--    Edit Form for super Admin--}}
+    <form action="{{ route("super-admin-update-profile-text-data",['id'=>$super_admin->id]) }}"
           method="POST"
           class="w-75 col-xxl-6 col-xl-6 col-lg-6 m-auto"
-          id="update_school_form">
+          id="edit_profile_form">
         @csrf
         @method('PUT')
-        <input type="hidden" name="id" value="{{ $school->id }}">
         <div class="form-group">
-            <label for="name">School Name <span class="text-danger"> ( Required) </span></label>
+            <label for="name">Super Admin Name <span class="text-danger"> ( Required) </span></label>
             <input type="text" name="name"
                    class="form-control @error('name') is-invalid @enderror"
                    required min="2" max="255"
-                   value="{{ old('name') ?? $school->name }}">
+                   value="{{ old('name') ?? $super_admin->name }}">
             @error('name')
+            <span class="invalid-feedback" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </span>
+            @enderror
+        </div>
+        <div class="form-group">
+            <label for="gender">Gender <span class="text-danger"> ( Required) </span></label>
+            <select name="gender" id="gender"
+                    class="form-control @error('gender') is-invalid @enderror"
+                    required>
+                <option value="">--- Select Gender ---</option>
+                @php
+                    $gender_contents = [
+                        'Male' => '<img src="'.asset('images/male-icon.jpg').'" style="height:24px;weight:24px;" class="mr-3">Male',
+                        'Female' => '<img src="'.asset('images/female-icon.jpg').'" style="height:24px;weight:24px;" class="mr-3">Female',
+                        'Other' => '<img src="'.asset('images/other-gender-icon.png').'" style="height:24px;weight:24px;" class="mr-3">Other',
+                    ];
+                @endphp
+                @foreach($gender_contents as $gender_value => $gender_content)
+                    @if(strcasecmp(old('gender'),$gender_value) == 0)
+                        @php
+                            $selected = 'selected = "selected"';
+                        @endphp
+                    @else
+                        @if(strcasecmp($gender_value,$super_admin->gender)==0)
+                            @php
+                                $selected = 'selected = "selected"';
+                            @endphp
+                        @else
+                            @php
+                                unset($selected);
+                            @endphp
+                        @endif
+                    @endif
+                    <option value="{{ $gender_value }}" {{ $selected ?? '' }}
+                    data-content="{{ $gender_content }}">{{ $gender_value }}</option>
+                @endforeach
+            </select>
+            @error('gender')
             <span class="invalid-feedback" role="alert">
                         <strong>{{ $message }}</strong>
                     </span>
@@ -58,7 +74,7 @@
             <input type="text" name="address"
                    class="form-control @error('address') is-invalid @enderror"
                    required min="2" max="255"
-                   value="{{ old('address') ?? $school->address }}">
+                   value="{{ old('address') ?? $super_admin->address }}">
             @error('address')
             <span class="invalid-feedback" role="alert">
                         <strong>{{ $message }}</strong>
@@ -71,10 +87,10 @@
             <input type="text" name="district"
                    class="form-control @error('district') is-invalid @enderror"
                    min="2" max="255"
-                   value="{{ old('district') ?? $school->district }}">
+                   value="{{ old('district') }}">
             @error('district')
             <span class="invalid-feedback" role="alert">
-                        <strong>{{ $message }}</strong>
+                        <strong>{{ $message ?? $super_admin->district }}</strong>
                     </span>
             @enderror
         </div>
@@ -84,26 +100,25 @@
                     class="form-control @error('country') is-invalid @enderror"
                     required>
                 <option value="">--- Select Country ---</option>
-                @foreach(config("utilities.countries") as $country)
-                    @php
-                        $selected_country = $school->country;
-                        $old_country_isset = old("country");
-                        if($old_country_isset){
-                            $selected_country = old('country');
-                        }
-                    @endphp
-                    @if(strcasecmp($selected_country,$country) == 0)
+                @foreach(config("utilities.countries") as $country_code => $country)
+                    @if(strcasecmp(old('country'),$country) == 0)
                         @php
                             $selected = 'selected = "selected"';
-                            unset($selected_country);
                         @endphp
                     @else
-                        @php
-                            unset($selected);
-                        @endphp
+                        @if(strcasecmp($country,$super_admin->country)==0)
+                            @php
+                                $selected = 'selected = "selected"';
+                            @endphp
+                        @else
+                            @php
+                                unset($selected);
+                            @endphp
+                        @endif
                     @endif
-                    <option value="{{ $country }}" {{ $selected ?? '' }}>{{ $country }}</option>
-
+                    <option data-content="<img src='https://www.countryflags.io/{{ $country_code }}/shiny/24.png' class='mr-3'>{{ $country }}"
+                            {{--                        data-thumbnail="https://www.countryflags.io/{{ $country_code }}/shiny/64.png"--}}
+                            value="{{ $country }}" {{ $selected ?? '' }}>{{ $country }}</option>
                 @endforeach
             </select>
             @error('country')
@@ -117,7 +132,7 @@
             <input type="text" name="phone1"
                    class="form-control @error('phone1') is-invalid @enderror"
                    required min="2" max="255"
-                   value="{{ old('phone1') ?? $school->phone1 }}">
+                   value="{{ old('phone1') ?? $super_admin->phone1 }}">
             @error('phone1')
             <span class="invalid-feedback" role="alert">
                         <strong>{{ $message }}</strong>
@@ -129,32 +144,8 @@
             <input type="text" name="phone2"
                    class="form-control @error('phone2') is-invalid @enderror"
                    min="2" max="255"
-                   value="{{ old('phone2') ?? $school->phone2 }}">
+                   value="{{ old('phone2') ?? $super_admin->phone2 }}">
             @error('phone2')
-            <span class="invalid-feedback" role="alert">
-                        <strong>{{ $message }}</strong>
-                    </span>
-            @enderror
-        </div>
-        <div class="form-group">
-            <label for="email1">Email 1</label>
-            <input type="email" name="email1"
-                   class="form-control @error('email1') is-invalid @enderror"
-                   min="2" max="255"
-                   value="{{ old('email1') ?? $school->email1 }}">
-            @error('email1')
-            <span class="invalid-feedback" role="alert">
-                        <strong>{{ $message }}</strong>
-                    </span>
-            @enderror
-        </div>
-        <div class="form-group">
-            <label for="email2">Email 2</label>
-            <input type="email" name="email2"
-                   class="form-control @error('email2') is-invalid @enderror"
-                   min="2" max="255"
-                   value="{{ old('email2') ?? $school->email2 }}">
-            @error('email2')
             <span class="invalid-feedback" role="alert">
                         <strong>{{ $message }}</strong>
                     </span>
@@ -164,7 +155,7 @@
             <label for="description">Description</label>
 
             <textarea name="description" id="description"
-                      class="form-control">{{ old('description') ?? $school->description }}</textarea>
+                      class="form-control">{{ old('description') ?? $super_admin->description }}</textarea>
             {{--            Script for using ckeditor in the description text area--}}
 
             @push("js")
@@ -210,13 +201,14 @@
             @endpush
 
         </div>
-        <input type="button" value="Save" id="save_btn" class="btn btn-lg bg-gradient-info float-right">
+        <input type="button" value="Save Profile" id="save_profile_btn" class="btn btn-lg bg-gradient-primary float-right text-white">
     </form>
 @endsection
 @push('js')
     @php
-        $title = "<h5 class=\"h5 font-weight-bolder\">Please Confirm your Password Before Updating the School Data</h5>";
-        $res = passwordConfirmationBoxScript("#save_btn","#update_school_form","Password",$title);
+        $title = "<h5 class=\"h5 font-weight-bolder\">Please Confirm your Password Before Saving the Super Admin</h5>";
+        $res = passwordConfirmationBoxScript("#save_profile_btn","#edit_profile_form","Password",$title);
         echo($res);
     @endphp
 @endpush
+

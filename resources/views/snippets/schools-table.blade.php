@@ -44,7 +44,7 @@
                 <td>{{ $loop->index +1  }}</td>
                 <td>{{ $school->id }}</td>
                 <td><img src="{{ getLogoImageUrl($school->logo) }}" alt="Logo of Not Found"
-                         class="img-fluid rounded" style="max-height: 70px;"></td>
+                         class="img-fluid rounded" style="max-height: 70px;" loading="lazy"></td>
                 <td>{{ $school->name }}</td>
                 <td>{{ joinNotEmptyArrayElements(', ',[$school->address,$school->district, $school->country]) }}</td>
                 @isset($view_school_route_name)

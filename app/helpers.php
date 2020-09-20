@@ -71,6 +71,12 @@ function joinNotEmptyArrayElements($join_by,$arr){
     return join($join_by,$new_arr);
 }
 
+function countryToCountryCode($country_name){
+    $country_array = config('utilities.countries');
+    $country_code = array_search ($country_name, $country_array);
+    return $country_code;
+}
+
 /**
  * @param $submit_btn_jquery_string
  * @param $form_jquery_string

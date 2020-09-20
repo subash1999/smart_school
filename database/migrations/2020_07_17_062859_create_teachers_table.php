@@ -17,7 +17,7 @@ class CreateTeachersTable extends Migration
             $table->id();
             $table->string('name');
             $table->enum('gender',['Male','Female','Other',null])->default(null);
-            $table->string('passport_photo')->nullable();
+            $table->string('passport_photo')->nullable()->default('https://via.placeholder.com/200.png?text=Teacher');
             $table->string('address')->nullable();
             $table->string('district')->nullable();
             $table->string('country')->default('Nepal');
@@ -35,6 +35,7 @@ class CreateTeachersTable extends Migration
             $table->date('joined_at')->nullable()->default(now());
             $table->boolean('has_left')->default(False);
             $table->text('description')->nullable();
+            $table->unique(['user_id','school_id']);
             $table->timestamps();
         });
     }

@@ -2,6 +2,8 @@
 
 namespace App;
 
+use App\Http\Controllers\StorageController;
+use Auth;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -9,7 +11,7 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Hash;  // Import Hash facade
 use Storage;
 
-class User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmail
 {
     use SoftDeletes;
     use Notifiable;
@@ -41,6 +43,17 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+//    delete event handling
+    public static function boot()
+    {
+        parent::boot();
+
+        // Attach event handler, on deleting of the user
+        User::deleting(function($user)
+        {
+            (new StorageController())->deleteAvatarImage($user->avatar);
+        });
+    }
 
     /**
      * Hash the password before saving it using the mutator
@@ -50,6 +63,25 @@ class User extends Authenticatable
     {
         $this->attributes['password'] = Hash::make($password);
     }
+
+//    logout and clear session variables of roles
+    public function logout(){
+        session(['current_role' => null]);
+        session(['current_school_id' => null]);
+        session(['current_dashboard_url' => null]);
+        Auth::logout();
+    }
+
+    /**
+     * This function returns the available user roles for an user
+     * [
+     * 'Super Admin' => [['id' => 1,'name'=>'john doe']],
+     * 'School Admin' => [[]],
+     *'Teacher' => [[]],
+     *'Guardian' => [[]],
+     * ]
+     * @return array
+     */
     public function getAvailableRoles(){
         $roles = [];
         if($this->isSuperAdmin()){

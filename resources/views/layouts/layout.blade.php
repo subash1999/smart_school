@@ -17,9 +17,19 @@
         <!-- Styles -->
         <link href="{{ asset('css/app.css') }}" rel="stylesheet">
         <link href="{{ asset('css/fontawesome-5-all.css') }}" rel="stylesheet" >
+        <link rel="stylesheet" href="{{ asset('css/bootstrap-select.css') }}">
+
+{{--        ck editor min and max height--}}
+        <style>
+            .ck-editor__editable_inline {
+                min-height: 100px;
+                max-height: 200px;
+            }
+        </style>
 
         <!-- CSS for file -->
         @stack('css')
+
 
         <!-- Fonts -->
         <link rel="dns-prefetch" href="//fonts.gstatic.com">
@@ -30,7 +40,7 @@
     <body style="padding-top: 70px;" >
         @include('layouts.nav')
         @yield('above-app-content')
-        <div id="app">
+        <div id="app" >
             <div class="bg-image"></div>
             @yield('app-content')
         </div>
@@ -44,6 +54,20 @@
     <script src="{{ asset('js/fontawesome-5-all.js') }}" defer></script>
     <script src="{{ asset('js/bootbox.all.js') }}" ></script>
     <script src="{{ asset('js/helpers.js') }}"></script>
+    <script src="{{ asset('js/bootstrap-select.js') }}"></script>
+    <script>
+        $(function () {
+            $('select').selectpicker({
+                'liveSearch': true,
+                // 'mobile': true,
+                'style': 'border',
+                'styleBase': 'form-control',
+                'dropupAuto': false,
+                'size': 7,
+                'container': '#app',
+            });
+        });
+    </script>
 
     <script defer>
         $.ajaxSetup({
@@ -53,7 +77,7 @@
         });
     </script>
 {{--    Show the alert-msg if the session contains the alert messages--}}
-    <script defer>
+    <script async>
 {{--        Check if the session exists for the alert-messages variable in config--}}
 {{--        The config is used because sometimes the session names may collide while programming
             and we may need to change the whole occurance of the varibale name for alert-messages,

@@ -2,10 +2,22 @@
 
 namespace App;
 
+use App\Http\Controllers\StorageController;
 use Illuminate\Database\Eloquent\Model;
 
 class School extends Model
 {
+    //    delete event handling
+    public static function boot()
+    {
+        parent::boot();
+
+        // Attach event handler, on deleting of the user
+        School::deleting(function($school)
+        {
+            (new StorageController())->deleteLogoImage($school->logo);
+        });
+    }
     /**
      * A school has many school admins
      * One or more school admin possible

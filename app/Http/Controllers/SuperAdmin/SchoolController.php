@@ -174,7 +174,7 @@ class SchoolController extends Controller
             'redirect_url'=>'nullable',
         ]);
 //        school model
-        $school = School::find($id);
+        $school = School::findOrFail($id);
 //        getting the old file name to delete
         $old_school_logo = $school->logo;
 //        store the new base64 Logo
@@ -222,7 +222,7 @@ class SchoolController extends Controller
         if ($request->has('redirect_url')){
             return redirect($request->post('redirect_url'));
         }
-        return redirect()->back();
+        return redirect(route('super-admin-school'));
     }
 
 }

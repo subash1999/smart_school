@@ -56,18 +56,18 @@ class StorageController extends Controller
     }
 
     /**
-     * @param String $filename
+     * @param $filename
      * @return bool
      */
-    public function deleteAvatarImage(String $filename){
+    public function deleteAvatarImage($filename){
         return $this->deleteFileFromStorage($filename,config('custom-settings.avatar-directory'));
     }
 
     /**
-     * @param String $filename
+     * @param $filename
      * @return bool
      */
-    public function deletePassportPhotoImage(String $filename){
+    public function deletePassportPhotoImage($filename){
         return $this->deleteFileFromStorage($filename,config('custom-settings.passport-photo-directory'));
     }
 

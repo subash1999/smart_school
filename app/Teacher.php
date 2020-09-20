@@ -2,10 +2,22 @@
 
 namespace App;
 
+use App\Http\Controllers\StorageController;
 use Illuminate\Database\Eloquent\Model;
 
 class Teacher extends Model
 {
+    //    delete event handling
+    public static function boot()
+    {
+        parent::boot();
+
+        // Attach event handler, on deleting of the user
+        Teacher::deleting(function($teacher)
+        {
+            (new StorageController())->deletePassportPhotoImage($teacher->passport_photo);
+        });
+    }
     /**
      * A teacher has many gradeTeacher
      * (grade_teacher) is a pivot table which shows relation between teacher and grade

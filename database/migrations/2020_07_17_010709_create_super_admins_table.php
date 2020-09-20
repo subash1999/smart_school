@@ -17,7 +17,7 @@ class CreateSuperAdminsTable extends Migration
             $table->id();
             $table->string('name');
             $table->enum('gender',['Male','Female','Other',null])->default(null);
-            $table->string('passport_photo')->nullable();
+            $table->string('passport_photo')->nullable()->default('https://via.placeholder.com/200.png?text=Super+Admin');
             $table->string('address')->nullable();
             $table->string('district')->nullable();
             $table->string('country')->default('Nepal');

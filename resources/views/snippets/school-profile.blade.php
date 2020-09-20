@@ -7,7 +7,9 @@
             @if (isNullOrEmptyString($school->district))
                 <h5 class="h5">{{ $school->country }}</h5>
             @else
-                <h5 class="h5">{{ $school->district }}, {{ $school->country }}</h5>
+                <h5 class="h5">{{ $school->district }}, {{ $school->country }}
+                    <img src="https://www.countryflags.io/{{ countryToCountryCode($school->country) }}/shiny/24.png">
+                </h5>
             @endif
         </div>
         <div class="justify-content-center m-auto">

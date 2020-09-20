@@ -1,0 +1,9 @@
+@extends("layouts.super-admin-layout")
+@section('page-heading','Users')
+@section('super-admin-content')
+    @include('snippets.users-table',[
+    'schools'=>$users,
+    'view_user_route_name'=>'super-admin-show-user',
+    'delete_user_route_name'=>'super-admin-destroy-user',
+    ])
+@endsection

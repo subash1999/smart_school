@@ -33,20 +33,32 @@
                         <div id="loginedUserInfo" class="d-none">
                             <div id="userInfoWithImage">
                                 <img src="{{ getAvatarImageUrl(Auth::user()->avatar) }}" alt="User"
-                                     class="img-fluid rounded-circle" style="height: 35px;" >
-                                <br>
+                                     class="rounded-circle mx-auto d-block" id="popover_image" height="100px" >
+
                                 <h6 class="text-center mt-3">{{ Auth::user()->email }}</h6>
+                                @push('css')
+                                    <style>
+                                        #userInfoWithImage{
+                                            height: 10px;
+                                        }
+                                        #popover_image{
+                                            height: 10px !important;
+                                            width: 10px;
+                                        }
+                                    </style>
+                                @endpush
                             </div>
                             <div id="userActions" style="height: 20px; overflow-y: scroll;">
 {{--                                Check if the current_dashboard_url varibale exists in the session--}}
                                 @if (session()->has('current_dashboard_url'))
                                     @if (session("current_dashboard_url") != null)
-                                        <a href="{{ url(session('current_dashboard_url')) }}" class="text-white btn border m-1 w-100"><i class="fas fa-tachometer-alt"></i> Go To Current Dashboard</a>
+                                        <a href="{{ url(session('current_dashboard_url')) }}" class="text-white btn border m-1 w-100"><small><i class="fas fa-tachometer-alt"></i> Go To Current Dashboard</small></a>
                                     @endif
                                 @endif
-                                <a href="{{ route('available-dashboard') }}" class="text-white btn border m-1 w-100"> <i class="fas fa-redo"></i> Switch Dashboard</a>
+                                <a href="{{ route("edit-user-info") }}" class="text-white btn border m-1 w-100"><small><i class="fas fa-user-plus"></i> Edit User Info</small></a>
+                                <a href="{{ route('available-dashboard') }}" class="text-white btn border m-1 w-100"><small><i class="fas fa-redo"></i> Switch Dashboard</small></a>
                                 <a class="text-danger btn border m-1 w-100 logout-btn" href="#" >
-                                    {{ __('Logout') }} <i class="fas fa-sign-out-alt"></i>
+                                    <small>{{ __('Logout') }} <i class="fas fa-sign-out-alt"></i></small>
                                 </a>
 {{--                                Since logout is a post routing operation we use form with POST method--}}
                                 <form class="logout-form" action="{{ route('logout') }}" method="POST" >
@@ -70,18 +82,17 @@
                                 //
                                 // Script for the popover of the logined user
                                 $('#loginedUser').popover({
-                                    container: 'body',
+                                    // container: 'body',
                                     delay: 150,
                                     title: $("#userInfoWithImage").html(),
-                                    content:$("#userActions").html(),
+                                    content: $("#userActions").html(),
                                     html: true,
                                     placement: 'bottom',
                                     trigger: 'focus|click',
                                     // boundary: 'viewport',
-                                    template: '<div class="popover bg-gradient-theme text-white" style="height: 20px;overflow-y: scroll;" role="tooltip">' +
-                                        '<div class="arrow bg-gradient-theme text-theme"></div>' +
-                                        '<h3 class="popover-header bg-gradient-theme text-white"></h3>' +
-                                        '<div class="text-white popover-body bg-gradient-theme "></div>' +
+                                    template: '<div class="popover bg-gradient-theme text-white" role="tooltip">' +
+                                        '<div class="popover-header bg-gradient-theme text-white"></div>' +
+                                        '<div class="text-white popover-body bg-gradient-theme"></div>' +
                                         '</div>'
                                 });
                                 // Submit the logout-form on logout btn clicked

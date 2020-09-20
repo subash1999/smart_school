@@ -1,5 +1,5 @@
 @extends("layouts.super-admin-layout")
-@section('page-heading','School Admins')
+@section('page-heading','School Admin / '.$school_admin->name)
 @section('super-admin-content')
     @include('snippets.school-admin-profile',[
         'school_admin' => $school_admin,

@@ -2,10 +2,22 @@
 
 namespace App;
 
+use App\Http\Controllers\StorageController;
 use Illuminate\Database\Eloquent\Model;
 
 class Student extends Model
 {
+    //    delete event handling
+    public static function boot()
+    {
+        parent::boot();
+
+        // Attach event handler, on deleting of the user
+        Student::deleting(function($student)
+        {
+            (new StorageController())->deletePassportPhotoImage($student->passport_photo);
+        });
+    }
     /**
      * A student has many guardians
      * i.e. one student may have a father and mother registered

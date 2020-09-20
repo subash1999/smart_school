@@ -1,3 +1,10 @@
+@push('js')
+    <script src="{{ asset("js/exif.js") }}"></script>
+    <script src="{{ asset('js/croppie.js') }}"></script>
+@endpush
+@push('css')
+    <link rel="stylesheet" href="{{ asset('css/croppie.css') }}">
+@endpush
 @php
     use Illuminate\Support\Str;
     $uuid = Str::uuid();

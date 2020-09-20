@@ -6,7 +6,7 @@
             'edit_school_route_name' => 'super-admin-edit-school',
             'delete_school_route_name' => 'super-admin-destroy-school'])
     <h4 class="h4 font-weight-bold">School Admins</h4>
-    <a href="{{ route('super-admin-create-school-admin') }}" class="btn btn-info bg-gradient-info m-3">Add School Admin</a>
+    <a href="{{ route('super-admin-create-school-admin') }}?school_id={{ $school->id }}" class="btn btn-info bg-gradient-info m-3">Add School Admin</a>
 
     @include('snippets.school-admins-table',[
             'school_admins'=>$school->schoolAdmins,

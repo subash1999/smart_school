@@ -17,7 +17,7 @@ class CreateGuardiansTable extends Migration
             $table->id();
             $table->string('name');
             $table->enum('gender',['Male','Female','Other',null])->default(null);;
-            $table->string('passport_photo')->nullable();
+            $table->string('passport_photo')->nullable()->default('https://via.placeholder.com/200.png?text=Guardian');
             $table->string('address')->nullable();
             $table->string('district')->nullable();
             $table->string('country')->default('Nepal');
@@ -33,6 +33,7 @@ class CreateGuardiansTable extends Migration
                 ->constrained('schools')
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
+            $table->unique(['user_id','school_id']);
             $table->timestamps();
         });
     }

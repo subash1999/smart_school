@@ -52,7 +52,9 @@
             <br>
             <label>District: {{ $school_admin->district }}</label>
             <br>
-            <label>Country: {{ $school_admin->country }}</label>
+            <label>Country: {{ $school_admin->country }}
+                <img src="https://www.countryflags.io/{{ countryToCountryCode($school_admin->country) }}/shiny/24.png">
+            </label>
             <br>
             <label>Phone 1: {{ $school_admin->phone1 }}</label>
             <br>

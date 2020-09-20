@@ -46,7 +46,7 @@
             @endphp
             <ul class="list-unstyled components">
                 @php
-                    $home_url = "#"
+                    $home_url = route('super-admin-dashboard');
                 @endphp
                 <li class="{{ activeClass($home_url) }}">
                     <a href="{{ $home_url }}">
@@ -94,16 +94,31 @@
                         </li>
                     </ul>
                 </li>
-                <li>
-                    <a href="#">
-                        <i class="fas fa-user-edit"></i>
-                        User Profile
+                @php
+                    $users_url = route('super-admin-user')
+                @endphp
+                <li class="{{ activeClass($users_url) }}">
+                    <a href="{{ $users_url }}">
+                        <i class="fas fa-user-secret"></i>
+                        Users
                     </a>
                 </li>
-                <li>
-                    <a href="#">
-                        <i class="fas fa-key"></i>
-                        Change Password
+                @php
+                    $edit_profile_url = route('super-admin-edit-profile')
+                @endphp
+                <li class="{{ activeClass($edit_profile_url) }}">
+                    <a href="{{ $edit_profile_url }}">
+                        <i class="fas fa-edit"></i>
+                        Edit Profile
+                    </a>
+                </li>
+                @php
+                    $change_super_admin_user_url = route('super-admin-change-super-admin-user')
+                @endphp
+                <li class="{{ activeClass($change_super_admin_user_url) }}">
+                    <a href="{{ $change_super_admin_user_url }}">
+                        <i class="fas fa-exchange-alt"></i>
+                        Change Super Admin User
                     </a>
                 </li>
             </ul>

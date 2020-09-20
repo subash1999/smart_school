@@ -2,10 +2,24 @@
 
 namespace App;
 
+use App\Http\Controllers\StorageController;
 use Illuminate\Database\Eloquent\Model;
 
 class SchoolAdmin extends Model
 {
+
+    //    delete event handling
+    public static function boot()
+    {
+        parent::boot();
+
+        // Attach event handler, on deleting of the user
+        SchoolAdmin::deleting(function($school_admin)
+        {
+            (new StorageController())->deletePassportPhotoImage($school_admin->passport_photo);
+        });
+    }
+
     /**
      * A school admin belongs to a school
      * It belongs to a school rather than schoolSession
