@@ -8,6 +8,9 @@ class StudentAttendance extends Model
 {
     protected $table = "student_attendance";
 
+    protected $casts = [
+        'is_present' => 'boolean',
+    ];
     /**
      * A student attendance belongs to a school calendar (day of school)
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

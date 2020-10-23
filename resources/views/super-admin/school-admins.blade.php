@@ -4,6 +4,7 @@
     @include('snippets.school-admins-table',[
             'school_admins'=>$school_admins,
             'redirect_url' => URL::current(),
+            'school_route_name' => 'super-admin-show-school',
             'view_route_name' => 'super-admin-show-school-admin',
             'edit_route_name' => 'super-admin-edit-school-admin',
             'delete_route_name' => 'super-admin-destroy-school-admin'])

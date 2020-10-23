@@ -1,5 +1,23 @@
 <?php
 return [
+    'GuardianRelationToStudent' =>
+        array(
+            "Father",
+            "Mother",
+            "Younger Brother",
+            "Older Brother",
+            "Younger Sister",
+            "Older Sister",
+            "Brother",
+            "Sister",
+            "Uncle",
+            "Aunt",
+            "Cousin",
+            "Maternal Uncle",
+            "Maternal Aunt",
+            "Caretaker",
+            "Local Guardian",
+        ),
     'countries' =>
         array(
             "AF" => "Afghanistan",

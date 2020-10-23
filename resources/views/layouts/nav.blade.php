@@ -50,11 +50,9 @@
                             </div>
                             <div id="userActions" style="height: 20px; overflow-y: scroll;">
 {{--                                Check if the current_dashboard_url varibale exists in the session--}}
-                                @if (session()->has('current_dashboard_url'))
-                                    @if (session("current_dashboard_url") != null)
-                                        <a href="{{ url(session('current_dashboard_url')) }}" class="text-white btn border m-1 w-100"><small><i class="fas fa-tachometer-alt"></i> Go To Current Dashboard</small></a>
+                                    @if (null !==getCurrentDashboardUrl())
+                                        <a href="{{ url(getCurrentDashboardUrl()) }}" class="text-white btn border m-1 w-100"><small><i class="fas fa-tachometer-alt"></i> Go To Current Dashboard</small></a>
                                     @endif
-                                @endif
                                 <a href="{{ route("edit-user-info") }}" class="text-white btn border m-1 w-100"><small><i class="fas fa-user-plus"></i> Edit User Info</small></a>
                                 <a href="{{ route('available-dashboard') }}" class="text-white btn border m-1 w-100"><small><i class="fas fa-redo"></i> Switch Dashboard</small></a>
                                 <a class="text-danger btn border m-1 w-100 logout-btn" href="#" >

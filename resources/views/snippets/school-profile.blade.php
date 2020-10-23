@@ -41,14 +41,22 @@
             @endisset
         </div>
     </div>
-    <hr style="border-width: 2px;" class="border-theme">
-    <h4 class="h4 font-weight-bold">General Information</h4>
-    <label class="text-justify">Phone : {{ joinNotEmptyArrayElements(', ',[$school->phone1,$school->phone2]) }}</label>
-    <br>
-    <label class="text-justify">Email : {{ joinNotEmptyArrayElements(', ',[$school->email1,$school->email2]) }}</label>
-    <br>
-    <label class="text-justify">Description: </label>
-    <br>
-    <label class="border border-theme p-3">{!! $school->description !!}</label>
-    <hr style="border-width: 2px;" class="border-theme">
+    @if(isset($only_school_banner))
+        @if($only_school_banner == True)
+
+        @endif
+    @else
+        <hr style="border-width: 2px;" class="border-theme">
+        <h4 class="h4 font-weight-bold">General Information</h4>
+        <label class="text-justify text-break">ID: {{ $school->id }}</label>
+        <br>
+        <label class="text-justify text-break">Phone : {{ joinNotEmptyArrayElements(', ',[$school->phone1,$school->phone2]) }}</label>
+        <br>
+        <label class="text-justify text-break">Email : {{ joinNotEmptyArrayElements(', ',[$school->email1,$school->email2]) }}</label>
+        <br>
+        <label class="text-justify text-break">Description: </label>
+        <br>
+        <label class="border border-theme p-3 text-break">{!! $school->description !!}</label>
+        <hr style="border-width: 2px;" class="border-theme">
+    @endif
 </div>

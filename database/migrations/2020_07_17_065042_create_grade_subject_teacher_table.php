@@ -24,6 +24,7 @@ class CreateGradeSubjectTeacherTable extends Migration
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
             $table->text('description')->nullable();
+            $table->unique(['grade_subject_id','teacher_id']);
             $table->timestamps();
         });
     }

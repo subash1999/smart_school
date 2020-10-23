@@ -116,4 +116,5 @@ class Student extends Model
         return $this->belongsToMany('App\GradeSubject','student_attendance','student_id','grade_subject_id');
     }
 
+
 }

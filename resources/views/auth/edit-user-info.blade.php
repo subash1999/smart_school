@@ -24,6 +24,14 @@
 @endsection
 @section('app-content')
     <div class="row m-5" style="height: 70%;" >
+        @include('snippets.change-image',[
+        'upload_btn_text' => 'Upload New Avatar',
+        'current_image_url' => getAvatarImageUrl(auth()->user()->avatar),
+        'image_upload_url' => route('update-avatar'),
+        'redirect_url' => null,
+    ])
+    </div>
+    <div class="row m-5" style="height: 70%;" >
         <div class="col-6 border-right border-theme">
             <h5 class="text-uppercase text-center font-weight-bold">Change Password</h5>
             <hr>

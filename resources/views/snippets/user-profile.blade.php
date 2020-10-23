@@ -48,7 +48,7 @@
             </div>
             <label>ID: {{ $user->id }}</label>
             <br>
-            <label>Email: {{ $user->email }}</label>
+            <label class="text-break">Email: {{ $user->email }}</label>
             <br>
             <label>Created at: {{ $user->created_at }}</label>
             <br>

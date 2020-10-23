@@ -95,7 +95,8 @@ class StorageController extends Controller
      */
     public function getAvatarImage(Request $request){
         $filename = $request->filename;
-        if (filter_var(urldecode($filename), FILTER_VALIDATE_URL)) {
+        if (filter_var(urldecode($filename), FILTER_VALIDATE_URL) ||
+            filter_var($filename, FILTER_VALIDATE_URL)) {
             $filename = urldecode($filename);
             return redirect($filename);
         }
@@ -110,17 +111,15 @@ class StorageController extends Controller
      */
     public function getPassportPhotoImage(Request $request){
         $filename = $request->filename;
-        if (filter_var(urldecode($filename), FILTER_VALIDATE_URL)) {
+        if (filter_var(urldecode($filename), FILTER_VALIDATE_URL) ||
+            filter_var($filename, FILTER_VALIDATE_URL)) {
             $filename = urldecode($filename);
             return redirect($filename);
         }
-        if($this->checkPassportPhotoPermission($filename)){
-            $path = $this->getFileFromStorage($filename,config('custom-settings.passport-photo-directory'));
-            return response()->file($path);
-        }
-        else{
-            abort(403,"You are not Authorized to Access File : $filename");
-        }
+        $filename = urldecode($filename);
+//        passport photo permission is handled in routing using PassportPhotoPermission Middleware
+        $path = $this->getFileFromStorage($filename,config('custom-settings.passport-photo-directory'));
+        return response()->file($path);
 
     }
 
@@ -131,7 +130,8 @@ class StorageController extends Controller
      */
     public function getLogoImage(Request $request){
         $filename = $request->filename;
-        if (filter_var(urldecode($filename), FILTER_VALIDATE_URL)) {
+        if (filter_var(urldecode($filename), FILTER_VALIDATE_URL) ||
+            filter_var($filename, FILTER_VALIDATE_URL)) {
             $filename = urldecode($filename);
             return redirect($filename);
         }
@@ -150,84 +150,87 @@ class StorageController extends Controller
         return $image_uploaded_file;
     }
 
-    /**
-     * @param String $filename
-     * @return bool
-     */
-    private function checkPassportPhotoPermission(String $filename){
-        $current_role = session('current_role',null);
-        $current_school_id = session('currrent_school_id',null);
-        $user_id = auth()->id();
-        if(strcasecmp("Super Admin",$current_role) == 0 &&
-            $current_school_id==null){
-            $super_admin =  \App\SuperAdmin::where('passport_photo',$filename)->count()>0;
-            if($super_admin){
-                return $super_admin;
-            }
-            $school_admin = \App\SchoolAdmin::where('passport_photo',$filename)->count()>0;
-            return $super_admin || $school_admin;
-        }
-        else if(strcasecmp("School Admin",$current_role) == 0 &&
-            $current_school_id!=null) {
-            $school_admin_pp = \App\SchoolAdmin::where('user_id',$user_id)
-                    ->where('passport_photo',$filename)->count()>0;
-            if($school_admin_pp){
-                return $school_admin_pp;
-            }
-            $student_pp = \App\Student::where('school_id',$current_school_id)
-                    ->where('passport_photo',$filename)->count()>0;
-            if($school_admin_pp || $student_pp){
-                return $school_admin_pp || $student_pp;
-            }
-            $guardian_pp = \App\Guardian::where('school_id',$current_school_id)
-                    ->where('passport_photo',$filename)->count()>0;
-            if($school_admin_pp || $student_pp || $guardian_pp){
-                return $school_admin_pp || $student_pp || $guardian_pp;
-            }
-            $teacher_pp = \App\Teacher::where('school_id',$current_school_id)
-                    ->where('passport_photo',$filename)->count()>0;
-            return $school_admin_pp || $student_pp || $guardian_pp || $teacher_pp;
-        }
-        else if(strcasecmp("Guardian",$current_role) == 0 &&
-            $current_school_id!=null) {
-            $student_pp = \App\Guardian::where('school_id',$current_school_id)
-                    ->where('user_id',$user_id)
-                    ->whereHas('students', function($q) use($filename){
-
-                        $q->where('passport_photo', '=', $filename);
-
-                    })
-                    ->count()>0;
-            if($student_pp){
-                return $student_pp;
-            }
-            $guardian_pp = \App\Guardian::where('school_id',$current_school_id)
-                    ->where('user_id',$user_id)
-                    ->where('passport_photo',$filename)->count()>0;
-            if($student_pp || $guardian_pp){
-                return $student_pp || $guardian_pp;
-            }
-            $teacher_pp = \App\Teacher::where('school_id',$current_school_id)
-                    ->where('filename',$filename)->count()>0;
-            return $student_pp || $guardian_pp || $teacher_pp;
-        }
-        else if(strcasecmp("Teacher",$current_role) == 0 &&
-            $current_school_id!=null) {
-            $student_pp = \App\Student::where('school_id',$current_school_id)
-                    ->where('passport_photo',$filename)
-                    ->count()>0;
-            if($student_pp){
-                return $student_pp;
-            }
-            $teacher_pp = \App\Teacher::where('school_id',$current_school_id)->count()>0;
-            if($student_pp || $teacher_pp){
-                return $student_pp || $teacher_pp;
-            }
-            $guardian_pp = \App\Guardian::where('school_id',$current_school_id)->count()>0;
-            return $student_pp || $teacher_pp || $guardian_pp;
-        }
-        else{
-            return false;
-        }
-    }
+//    /**
+//     * @param String $filename
+//     * @return bool
+//     */
+//    private function checkPassportPhotoPermission(String $filename){
+//        $current_role = getCurrentUserRole();
+//        $current_school_id = getCurrentSchoolId();
+//        $user_id = auth()->id();
+//        if(strcasecmp("Super Admin",$current_role) == 0 &&
+//            $current_school_id==null){
+//            $super_admin =  \App\SuperAdmin::where('passport_photo',$filename)->count()>0;
+//            if($super_admin){
+//                return $super_admin;
+//            }
+//            $school_admin = \App\SchoolAdmin::where('passport_photo',$filename)->count()>0;
+//            return $super_admin || $school_admin;
+//        }
+//        else if(strcasecmp("School Admin",$current_role) == 0 &&
+//            $current_school_id!=null) {
+//
+//            $school_admin_pp = \App\SchoolAdmin::where('user_id',$user_id)
+//                    ->where('passport_photo',$filename)->count()>0;
+//            if($school_admin_pp){
+//                return $school_admin_pp;
+//            }
+//            $student_pp = \App\Student::where('school_id',$current_school_id)
+//                    ->where('passport_photo',$filename)->count()>0;
+//            if($school_admin_pp || $student_pp){
+//                return $school_admin_pp || $student_pp;
+//            }
+//            $guardian_pp = \App\Guardian::where('school_id',$current_school_id)
+//                    ->where('passport_photo',$filename)->count()>0;
+//            if($school_admin_pp || $student_pp || $guardian_pp){
+//                return $school_admin_pp || $student_pp || $guardian_pp;
+//            }
+//
+//            $teacher_pp = \App\Teacher::where('school_id',$current_school_id)
+//                    ->where('passport_photo',$filename)->count()>0;
+//
+//            return $school_admin_pp || $student_pp || $guardian_pp || $teacher_pp;
+//        }
+//        else if(strcasecmp("Guardian",$current_role) == 0 &&
+//            $current_school_id!=null) {
+//            $student_pp = \App\Guardian::where('school_id',$current_school_id)
+//                    ->where('user_id',$user_id)
+//                    ->whereHas('students', function($q) use($filename){
+//
+//                        $q->where('passport_photo', '=', $filename);
+//
+//                    })
+//                    ->count()>0;
+//            if($student_pp){
+//                return $student_pp;
+//            }
+//            $guardian_pp = \App\Guardian::where('school_id',$current_school_id)
+//                    ->where('user_id',$user_id)
+//                    ->where('passport_photo',$filename)->count()>0;
+//            if($student_pp || $guardian_pp){
+//                return $student_pp || $guardian_pp;
+//            }
+//            $teacher_pp = \App\Teacher::where('school_id',$current_school_id)
+//                    ->where('filename',$filename)->count()>0;
+//            return $student_pp || $guardian_pp || $teacher_pp;
+//        }
+//        else if(strcasecmp("Teacher",$current_role) == 0 &&
+//            $current_school_id!=null) {
+//            $student_pp = \App\Student::where('school_id',$current_school_id)
+//                    ->where('passport_photo',$filename)
+//                    ->count()>0;
+//            if($student_pp){
+//                return $student_pp;
+//            }
+//            $teacher_pp = \App\Teacher::where('school_id',$current_school_id)->count()>0;
+//            if($student_pp || $teacher_pp){
+//                return $student_pp || $teacher_pp;
+//            }
+//            $guardian_pp = \App\Guardian::where('school_id',$current_school_id)->count()>0;
+//            return $student_pp || $teacher_pp || $guardian_pp;
+//        }
+//        else{
+//            return false;
+//        }
+//    }
 }

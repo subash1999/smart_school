@@ -23,7 +23,7 @@ class CreateSchoolsTable extends Migration
             $table->string('phone2')->nullable();
             $table->string('email1')->nullable();
             $table->string('email2')->nullable();
-            $table->string('logo')->nullable();
+            $table->string('logo')->nullable()->default('https://via.placeholder.com/200.png?text=Logo');
             $table->text('description')->nullable();
             $table->timestamps();
         });

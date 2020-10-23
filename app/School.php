@@ -56,6 +56,48 @@ class School extends Model
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function guardians(){
-        return $this->hasMany('App\Guardian','guardian_id','id');
+        return $this->hasMany('App\Guardian','school_id','id');
     }
+
+    public function subjects(){
+        $subjects = [];
+        foreach ($this->SchoolSessions as $school_session){
+            foreach($school_session->Subjects as $subject){
+                array_push($subjects,$subject);
+            }
+        }
+        return collect($subjects);
+    }
+
+    public function examGroups(){
+        $exam_groups = [];
+        foreach ($this->SchoolSessions as $school_session){
+            foreach($school_session->ExamGroups as $exam_group){
+                array_push($exam_groups,$exam_group);
+            }
+        }
+        return collect($exam_groups);
+    }
+
+    public function exams(){
+        $exams = [];
+        foreach ($this->SchoolSessions as $school_session){
+            foreach($school_session->exams() as $exam){
+                array_push($exams,$exam);
+            }
+        }
+        return collect($exams);
+    }
+
+    public function grades(){
+        $grades = [];
+        foreach ($this->SchoolSessions as $school_session){
+            foreach($school_session->grades()->orderBy('grade_name')->orderBy('section')->get()
+                    as $grade){
+                array_push($grades,$grade);
+            }
+        }
+        return collect($grades);
+    }
+
 }

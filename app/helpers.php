@@ -206,3 +206,77 @@ function base64ToUploadedFile(String $base64Image){
     $image_uploaded_file = fileToUploadedFile($tmp_image_file);;
     return $image_uploaded_file;
 }
+
+function getCurrentUserRole(){
+    return session('current_role');
+}
+
+function getCurrentSchoolId(){
+    return session('current_school_id');
+}
+
+function getCurrentDashboardUrl(){
+    return session('current_dashboard_url');
+}
+
+function getCurrentSchoolSession(){
+    $school_session_id = getCurrentSchoolSessionId();
+    $school_session = null;
+    if(isset($school_session_id)){
+        try{
+            $school_session = \App\SchoolSession::findOrFail($school_session_id);
+        }
+        catch (\Illuminate\Database\Eloquent\ModelNotFoundException  $e){
+            $school_session = null;
+        }
+    }
+    return $school_session;
+}
+
+function getCurrentSchoolSessionName(){
+    $school_session = getCurrentSchoolSession();
+    if(isset($school_session)){
+        return $school_session->name;
+    }
+//    return null if school session is not set
+    return null;
+}
+
+function getCurrentSchoolSessionId(){
+    $school_session_id = session('current_school_session_id');
+    if(isset($school_session_id)) {
+        try {
+            //    if school session id is set check if it exists in database
+            $school_session = \App\SchoolSession::findOrFail($school_session_id);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException  $e) {
+//            if school session id does not exists then set it to null
+            $school_session_id = null;
+        }
+    }
+    else{
+//        if variable value is not set then make it null
+        $school_session_id = null;
+    }
+    return $school_session_id;
+}
+
+function setCurrentSchoolSessionId($school_session_id){
+    if(isset($school_session_id)) {
+        try {
+            //    if school session id is set check if it exists in database
+            $school_session = \App\SchoolSession::findOrFail($school_session_id);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException  $e) {
+//            if school session id does not exists then set it to null
+            $school_session_id = null;
+        }
+    }
+    else{
+//        if variable value is not set then make it null
+        $school_session_id = null;
+    }
+
+    session([
+        'current_school_session_id' => $school_session_id
+    ]);
+    return True;
+}

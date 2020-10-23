@@ -14,6 +14,10 @@ class Grade extends Model
         return $this->belongsTo('App\SchoolSession','school_session_id','id');
     }
 
+    public function school(){
+        return \App\SchoolSession::find($this->SchoolSession->id)->School;
+    }
+
     /**
      * get the subjects of a grade
      * A grade has many subjects
@@ -48,6 +52,22 @@ class Grade extends Model
      */
     public function studentGrades(){
         return $this->hasMany('App\StudentGrade','grade_id','id');
+    }
+
+    public function teachers(){
+//        grade subject ids of the grade
+        $grade_subject_ids = $this->gradeSubjects()->pluck('id')->toArray();
+//        get the teachers of the gradeSubject ids
+        return \App\GradeSubjectTeacher::whereIn('grade_subject_id',$grade_subject_ids)
+            ->get();
+    }
+
+    public function exams(){
+        //        grade subject ids of the grade
+        $grade_subject_ids = $this->gradeSubjects()->pluck('id')->toArray();
+//        get the exams of the gradeSubject ids
+        return \App\Exam::whereIn('grade_subject_id',$grade_subject_ids)
+            ->get();
     }
 
 

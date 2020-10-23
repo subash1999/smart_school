@@ -37,10 +37,10 @@
 
 
     </head>
-    <body style="padding-top: 70px;" >
+    <body style="padding-top: 70px;" class="scrollbar-thin">
         @include('layouts.nav')
         @yield('above-app-content')
-        <div id="app" >
+        <div id="app" class="scrollbar-thin">
             <div class="bg-image"></div>
             @yield('app-content')
         </div>
@@ -55,6 +55,9 @@
     <script src="{{ asset('js/bootbox.all.js') }}" ></script>
     <script src="{{ asset('js/helpers.js') }}"></script>
     <script src="{{ asset('js/bootstrap-select.js') }}"></script>
+{{--    thoo clock for the analog clock--}}
+    <script src="{{ asset('vendors/Customizable-Analog-Alarm-Clock-with-jQuery-Canvas-thooClock/js/jquery.thooClock.js') }}"></script>
+
     <script>
         $(function () {
             $('select').selectpicker({

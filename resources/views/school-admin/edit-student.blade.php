@@ -1,136 +1,69 @@
-@extends("layouts.super-admin-layout")
-@section('page-heading','School Admin/ '.$school_admin->name.' ( Edit )')
-
-@section('super-admin-content')
+@extends('layouts.school-admin-layout')
+@section('page-heading','Students / Edit ('.$student->name.')')
+@section('school-admin-content')
+    @php
+        $school = \App\School::findOrFail(getCurrentSchoolId());
+    @endphp
+    <h2 class="h2 text-center">Edit Student</h2>
     <div class="d-block container">
-        <a href="{{ route('super-admin-show-school-admin',['id'=>$school_admin->id]) }}"
+        <a href="{{ route('school-admin-show-student',['id'=>$student->id]) }}"
            class="btn btn-primary bg-gradient-primary">View</a>
-        <input type="button" class="btn btn-danger" value="Delete" name="delete" id="delete_school_admin_btn_{{ $school_admin->id }}">
-        <form action="{{ route('super-admin-destroy-school-admin',['id' => $school_admin->id]) }}"
-              name="delete_school_admin_form" id="delete_school_admin_form_{{ $school_admin->id }}"
+        <input type="button" class="btn btn-danger" value="Delete" name="delete" id="delete_student_btn_{{ $student->id }}">
+        <form action="{{ route('school-admin-destroy-student',['id' => $student->id]) }}"
+              name="delete_student_form" id="delete_student_form_{{ $student->id }}"
               method="POST">
             @method('delete')
             @csrf
             <input type="hidden" value="{{ route('super-admin-school-admin') }}" name="redirect_url">
-            <input type="hidden" value="{{ $school_admin->id }}" name="id" id="school_admin_id_{{ $school_admin->id }}">
+            <input type="hidden" value="{{ $student->id }}" name="id" id="student_id_{{ $student->id }}">
         </form>
     </div>
     @push('js')
         @php
-            $title = "<h5 class=\"h5 font-weight-bolder\">Please Confirm your Password Before Deleting the School Admin</h5>";
-            $title .= "<h6 class=\"small d-inline-block text-truncate w-75\"> ID : ".$school_admin->id." </h6>";
-            $title .= "<h6 class=\"small d-inline-block text-truncate w-75\"> School Admin Name : $school_admin->name </h6>";
-            $title .= "<h6 class=\"small d-inline-block text-truncate w-75\"> User : ".$school_admin->User->email." </h6>";
-            $title .= "<h6 class=\"small d-inline-block text-truncate w-75\"> School Name : ".$school_admin->School->name."</h6>";
-            $res = passwordConfirmationBoxScript("#delete_school_admin_btn_".$school_admin->id,"#delete_school_admin_form_".$school_admin->id,"Password",$title);
+            $title = "<h5 class=\"h5 font-weight-bolder\">Please Confirm your Password Before Deleting the Student</h5>";
+            $title .= "<h6 class=\"small d-inline-block text-truncate w-75\"> ID : ".$student->id." </h6>";
+            $title .= "<h6 class=\"small d-inline-block text-truncate w-75\"> Student Name : $student->name </h6>";
+            $title .= "<h6 class=\"small d-inline-block text-truncate w-75\"> School Name : ".$student->School->name."</h6>";
+            $res = passwordConfirmationBoxScript("#delete_student_btn_".$student->id,"#delete_student_form_".$student->id,"Password",$title);
             echo($res);
         @endphp
     @endpush
     @include('snippets.change-image',[
         'upload_btn_text' => 'Upload New Passport Photo',
-        'current_image_url' => getPassportPhotoImageUrl($school_admin->passport_photo),
-        'image_upload_url' => route('super-admin-update-school-admin-passport-photo',['id' => $school_admin->id]),
+        'current_image_url' => getPassportPhotoImageUrl($student->passport_photo),
+        'image_upload_url' => route('school-admin-update-student-passport-photo',['id' => $student->id]),
         'redirect_url' => null,
     ])
-
-{{--    Edit Form for school Admin--}}
-    <form action="{{ route("super-admin-update-school-admin-text-data",['id'=>$school_admin->id]) }}"
+    {{-- Edit Form for Student--}}
+    <form action="{{ route("school-admin-update-student-text-data",['id'=>$student->id]) }}"
           method="POST"
           class="w-75 col-xxl-6 col-xl-6 col-lg-6 m-auto"
-          id="edit_school_admin_form">
-        @csrf
+          id="save_student_form">
         @method('PUT')
-        <div class="form-group">
-            <label for="user">User <span class="text-danger"> ( Required) </span></label>
-            <select name="user" id="user"
-                    class="form-control @error('user') is-invalid @enderror"
-                    required>
-                <option value="">-- Select User --</option>
-                @foreach(\App\User::orderBy('email')->get() as $user)
-                    @if(strcasecmp(old('user'),$user->id) == 0)
-                        @php
-                            $selected = 'selected = "selected"';
-                        @endphp
-                    @else
-                        @if(strcasecmp($user->id,$school_admin->user_id)==0)
-                            @php
-                                $selected = 'selected = "selected"';
-                            @endphp
-                        @else
-                            @php
-                                unset($selected);
-                            @endphp
-                        @endif
-                    @endif
-                    <option
-                        value="{{ $user->id }}"
-                        {{ $selected ?? '' }}
-                        data-content="<div
-                        >
-                        <img src='{{ getAvatarImageUrl($user->avatar) }}'
-                        loading='lazy'
-                        style='height:24px;weight:24px;' class='mr-3'>{{ $user->email }}
-                            </div>">
-                        {{ $user->email }}
-                    </option>
-                @endforeach
-            </select>
-            @error('user')
-            <span class="invalid-feedback" role="alert">
-                        <strong>{{ $message }}</strong>
-                    </span>
-            @enderror
-        </div>
+        @csrf
         <div class="form-group">
             <label for="school">School <span class="text-danger"> ( Required) </span></label>
-            <select name="school" id="school"
-                    class="form-control @error('school') is-invalid @enderror"
-                    required>
-                <option value="">-- Select School --</option>
-                @foreach(\App\School::orderBy('name')->get() as $school)
-                    @if(strcasecmp(old('school'),$school->id) == 0)
-                        @php
-                            $selected = 'selected = "selected"';
-                        @endphp
-                    @else
-                        @if(strcasecmp($school->id,$school_admin->school_id)==0)
-                            @php
-                                $selected = 'selected = "selected"';
-                            @endphp
-                        @else
-                            @php
-                                unset($selected);
-                            @endphp
-                        @endif
-                    @endif
-                    @php
-                        $full_address_array = array();
-                        if(isset($school->address)){
-                            array_push($full_address_array,$school->address);
-                        }
-                        if(isset($school->district)){
-                            array_push($full_address_array,$school->district);
-                        }
-                        if(isset($school->country)){
-                            array_push($full_address_array,$school->country);
-                        }
-                        $full_address = implode(", ",$full_address_array);
-                    @endphp
-                    <option
-                        value="{{ $school->id }}"
-                        {{ $selected ?? '' }}
-                        data-content="<div
-                        >
-                        <img src='{{ getLogoImageUrl($school->logo) }}'
-                        loading='lazy'
-                        style='height:24px;weight:24px;' class='mr-3'>{{ $school->name }}
-                            <sub><small>{{ $full_address }}</small></sub>
-                        </div>">
-                        {{ $school->name }}
-
-                    </option>
-                @endforeach
-            </select>
+            @php
+                $full_address_array = array();
+                if(isset($school->address)){
+                    array_push($full_address_array,$school->address);
+                }
+                if(isset($school->district)){
+                    array_push($full_address_array,$school->district);
+                }
+                if(isset($school->country)){
+                    array_push($full_address_array,$school->country);
+                }
+                $full_address = implode(", ",$full_address_array);
+            @endphp
+            <div>
+                <img src='{{ getLogoImageUrl($school->logo) }}'
+                     loading='lazy'
+                     style='height:24px;weight:24px;' class='mr-3'>{{ $school->name }}
+                <br>
+                <small>{{ $full_address }}</small>
+            </div>
+            <input type="hidden" name="school" value="{{ $school->id }}" class="form-control @error('school') is-invalid @enderror">
             @error('school')
             <span class="invalid-feedback" role="alert">
                         <strong>{{ $message }}</strong>
@@ -138,11 +71,11 @@
             @enderror
         </div>
         <div class="form-group">
-            <label for="name">School Admin Name <span class="text-danger"> ( Required) </span></label>
+            <label for="name">Student Name <span class="text-danger"> ( Required) </span></label>
             <input type="text" name="name"
                    class="form-control @error('name') is-invalid @enderror"
                    required min="2" max="255"
-                   value="{{ old('name') ?? $school_admin->name }}">
+                   value="{{ old('name')?? $student->name }}">
             @error('name')
             <span class="invalid-feedback" role="alert">
                         <strong>{{ $message }}</strong>
@@ -168,7 +101,7 @@
                             $selected = 'selected = "selected"';
                         @endphp
                     @else
-                        @if(strcasecmp($gender_value,$school_admin->gender)==0)
+                        @if(strcasecmp($gender_value,$student->gender)==0)
                             @php
                                 $selected = 'selected = "selected"';
                             @endphp
@@ -193,7 +126,7 @@
             <input type="text" name="address"
                    class="form-control @error('address') is-invalid @enderror"
                    required min="2" max="255"
-                   value="{{ old('address') ?? $school_admin->address }}">
+                   value="{{ old('address') ?? $student->address }}">
             @error('address')
             <span class="invalid-feedback" role="alert">
                         <strong>{{ $message }}</strong>
@@ -206,10 +139,10 @@
             <input type="text" name="district"
                    class="form-control @error('district') is-invalid @enderror"
                    min="2" max="255"
-                   value="{{ old('district') ?? $school_admin->district }}">
+                   value="{{ old('district') ?? $student->district }}">
             @error('district')
             <span class="invalid-feedback" role="alert">
-                        <strong>{{ $message ?? $school_admin->district }}</strong>
+                        <strong>{{ $message ?? $student->district }}</strong>
                     </span>
             @enderror
         </div>
@@ -225,7 +158,7 @@
                             $selected = 'selected = "selected"';
                         @endphp
                     @else
-                        @if(strcasecmp($country,$school_admin->country)==0)
+                        @if(strcasecmp($country,$student->country)==0)
                             @php
                                 $selected = 'selected = "selected"';
                             @endphp
@@ -251,7 +184,7 @@
             <input type="text" name="phone1"
                    class="form-control @error('phone1') is-invalid @enderror"
                    required min="2" max="255"
-                   value="{{ old('phone1') ?? $school_admin->phone1 }}">
+                   value="{{ old('phone1') ?? $student->phone1 }}">
             @error('phone1')
             <span class="invalid-feedback" role="alert">
                         <strong>{{ $message }}</strong>
@@ -263,7 +196,7 @@
             <input type="text" name="phone2"
                    class="form-control @error('phone2') is-invalid @enderror"
                    min="2" max="255"
-                   value="{{ old('phone2') ?? $school_admin->phone2 }}">
+                   value="{{ old('phone2') ?? $student->phone2 }}">
             @error('phone2')
             <span class="invalid-feedback" role="alert">
                         <strong>{{ $message }}</strong>
@@ -274,7 +207,7 @@
             <label for="description">Description</label>
 
             <textarea name="description" id="description"
-                      class="form-control">{{ old('description') ?? $school_admin->description }}</textarea>
+                      class="form-control">{{ old('description') ?? $student->description }}</textarea>
             {{--            Script for using ckeditor in the description text area--}}
 
             @push("js")
@@ -320,14 +253,16 @@
             @endpush
 
         </div>
-        <input type="button" value="Save School Admin" id="save_school_admin_btn" class="btn btn-lg bg-gradient-primary float-right text-white">
+        <input type="button" value="Save Student" id="save_student_btn"
+               class="btn btn-lg bg-gradient-primary float-right text-white">
     </form>
 @endsection
 @push('js')
     @php
-        $title = "<h5 class=\"h5 font-weight-bolder\">Please Confirm your Password Before Saving the School Admin</h5>";
-        $res = passwordConfirmationBoxScript("#save_school_admin_btn","#edit_school_admin_form","Password",$title);
+        $title = "<h5 class=\"h5 font-weight-bolder\">Please Confirm your Password Before Saving the Student</h5>";
+        $title .= "<h6>ID: ".$student->id."</h6>"."<h6>Name: ".$student->name."</h6>";
+        $title .= "<h6>School Name: ".$student->school->name."</h6>";
+        $res = passwordConfirmationBoxScript("#save_student_btn","#save_student_form","Password",$title);
         echo($res);
     @endphp
 @endpush
-

@@ -44,6 +44,8 @@
                 </div>
                 </h2>
             </div>
+            <label>ID: {{ $school_admin->id }}</label>
+            <br>
             <label>Name: {{ $school_admin->name }}</label>
             <br>
             <label>Gender: {{ $school_admin->gender }}</label>
@@ -62,7 +64,22 @@
             <br>
             <label>User: {{ $school_admin->User->email }}</label>
             <br>
-            <label>School: <a href="{{ $school_url }}">{{ $school_admin->School->name }}</a></label>
+            <label>School:
+                @isset($school_url)
+                <a href="{{ $school_url }}">{{ $school_admin->School->name }}</a>
+                @else
+                    {{ $school_admin->School->name }}
+                @endisset
+
+            </label>
+            <br>
+            <label>
+                <b>Description:</b>
+                <br>
+                <div class="border border-theme p-3">
+                    {!! $school_admin->description !!}
+                </div>
+            </label>
             <br>
             <label>Created at: {{ $school_admin->created_at }}</label>
             <br>

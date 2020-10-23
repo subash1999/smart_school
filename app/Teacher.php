@@ -7,6 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Teacher extends Model
 {
+    protected $casts=[
+        'has_left'=>'boolean'
+    ];
     //    delete event handling
     public static function boot()
     {
@@ -32,7 +35,7 @@ class Teacher extends Model
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function gradeSubjects(){
-        return $this->belongsToMany('App\GradeSubject','grade_teacher','teacher_id','grade_subject_id');
+        return $this->belongsToMany('App\GradeSubject','grade_subject_teacher','teacher_id','grade_subject_id');
     }
 
     /**
@@ -66,4 +69,5 @@ class Teacher extends Model
     public function school(){
         return $this->belongsTo('App\School','school_id','id');
     }
+
 }

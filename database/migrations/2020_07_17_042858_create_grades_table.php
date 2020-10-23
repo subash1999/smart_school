@@ -21,6 +21,7 @@ class CreateGradesTable extends Migration
                 ->constrained('school_sessions')
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
+            $table->unique(['grade_name','section','school_session_id']);
             $table->text('description')->nullable();
             $table->timestamps();
         });

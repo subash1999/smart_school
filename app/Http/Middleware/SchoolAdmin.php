@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use Closure;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class SchoolAdmin
 {
@@ -17,9 +18,15 @@ class SchoolAdmin
     {
         $auth = auth()->user() ? auth()->user()->isSchoolAdmin() : false;
         if ($auth){
-            if(strcasecmp(session("current_role"),"School Admin")==0
-            && ($request->school_id == session("current_school_id"))){
-                return $next($request);
+            $school_id = getCurrentSchoolId();
+            if(isset($school_id)){
+                try{
+                    \App\School::findOrFail(getCurrentSchoolId());
+                    return $next($request);
+                }
+                catch (ModelNotFoundException $e){
+
+                }
             }
             abort(403,"Please Switch the Dashboard to Access \"School Admin Dashboard\"");
         }
